@@ -58,7 +58,49 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  // check which transistionend event the browser uses
 
+  // function whichTransitionEvent() {
+  //   const el = document.createElement('fake'),
+  //       transEndEventNames = {
+  //           'WebkitTransition' : 'webkitTransitionEnd',// Saf 6, Android Browser
+  //           'MozTransition'    : 'transitionend',      // only for FF < 15
+  //           'transition'       : 'transitionend'       // IE10, Opera, Chrome, FF 15+, Saf 7+
+  //       };
+
+  //   for(const t in transEndEventNames) {
+  //       if( el.style[t] !== undefined ) {
+  //           return transEndEventNames[t];
+  //       }
+  //     }
+  //   }
+
+  // const transEndEventName = whichTransitionEvent();
+  // console.log(transEndEventName)
+
+  
+  const playSound = (e) => {
+    const keyNumber = e.keyCode;
+    const div = document.querySelector(`div[data-key="${keyNumber}"]`);
+    const audio = document.querySelector(`audio[data-key="${keyNumber}"]`);
+    if (!audio) return; // if other keys on keyboard are clicked that are not used
+
+    div.classList.add("playing");
+    audio.currentTime = 0; // rewind to he start of the audiofile at each key-click
+    audio.play();
+  };
+  
+  const removePlayingClass = (e) => {
+    if (e.propertyName !== "transform") return;
+    e.currentTarget.classList.remove("playing");
+  }
+  
+  const keys = document.querySelectorAll(".key");
+  keys.forEach(key => {
+    key.addEventListener("transitionend", removePlayingClass)
+  });
+
+  window.addEventListener("keydown", playSound);
 </script>
 
 
